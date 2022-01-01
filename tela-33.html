@@ -1,0 +1,152 @@
+<style>
+    li {
+        margin-bottom: 12px;
+        margin-left: 18px;
+    }
+
+    .questao:hover {
+        background-color: #FF592A;
+        cursor: pointer;
+    }
+
+    .marcado {
+        background-color: #FF592A;
+    }
+
+    .submeter {
+        margin: 1em auto;
+        font-weight: bold;
+        color: #ffffff;
+        border-radius: 3px;
+        background-color: #FF592A;
+        border: solid 0 transparent;
+        outline: none;
+        box-shadow: 0 .1em rgba(0, 0, 0, .5);
+        padding: .5em;
+        display: block;
+        width: 50%;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .feed {
+        position: relative;
+        width: 270px;
+        height: 125px;
+        background-color: #FF592A;
+        border-radius: 10px;
+        flex-wrap: nowrap;
+        cursor: pointer;
+    }
+</style>
+<div style="height: 72px; width: 100%; background-color: #FF592A; ">
+    <div style="background-color: white; width: 17px; height: 66px; margin-left: 19px; display: flex;" /> <img
+        style="height: 43.5px; width:180px; margin-top: 12.8px; margin-left: 68.45px;" src="recursos/imgs/SI_H1.png">
+    <img style="height: 73px; margin-left:170.85px;" src="recursos/imgs/SI_H2.png"> <img
+        style="height: 46.8px; width:56.75px;  position: absolute; right: 1px;" src="recursos/imgs/SI_H3.png">
+</div>
+<div class="coluna-esquerda largura-1_3">
+    <img class="animate__animated animate__flipInX"
+        style="height: 219.4px; width: 241.85px; margin-top: 80.65px; margin-left: 35px;" src="recursos/imgs/SI_46.png">
+</div>
+<div class="coluna-direita largura-2_1" style="width: 500px; height: 500px; margin-top: 55px;margin-right: 75px;">
+    <h1>Questão 1</h1>
+    <p><strong>Identifique as atividades destinadas a cada grupo profissional, considerando a expertise das áreas, e
+            relacione-as.</strong>
+    </p>
+    <div style="margin-left: 60px; margin-top: 20px; margin-bottom: 20px;">
+        <p>Profissionais de saúde</p>
+        <p>Profissionais de segurança</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; position: absolute; margin-top: -65px; margin-left: 24px;">
+        <input style="width: 20px; height: 20px; text-align: center;" type="text" id="opc_0">
+        <input style="width: 20px; height: 20px; text-align: center;" type="text" id="opc_1">
+    </div>
+
+    <p>1 - Exercício das atividades de atendimento, vigilância, custódia, guarda e orientação de pessoas recolhidas aos
+        estabelecimentos penais.
+    </p>
+    <p>2 - Atividades que correspondem à classificação e assistência à saúde do preso.</p>
+
+    <div class="submeter">Submeter</div>
+    <div style="margin-top: -130px; width: 500px; height: 159px;" class="feed" id="feedCerto">
+        <img style="height: 70px; margin-top: -48px; margin-left: 30px;margin-bottom: 15px;"
+            src="recursos/imgs/SI_CE.png">
+        <h2 style="margin-left: 30px;">Resposta correta</h2>
+        <p style="margin-left: 30px; width: 450px;">Parabéns! Ao analisarmos aspectos que dizem respeito às atribuições
+            e responsabilidades dos profissionais de segurança e
+            da saúde, percebemos que sem a atuação conjunta desses servidores a concretização da oferta da saúde no
+            sistema
+            prisional se torna praticamente inviável.</p>
+    </div>
+    <div style="margin-top: -165px; width: 500px; height: 171px;" class="feed" id="feedErrado">
+        <img style="height: 70px; margin-top: -48px; margin-left: 30px;margin-bottom: 15px;"
+            src="recursos/imgs/SI_CE.png">
+        <h2 style="margin-left: 30px;">Resposta incorreta</h2>
+        <p style="margin-left: 30px; width: 450px;">Na verdade, a sequência correta não é essa. Ao analisarmos aspectos
+            que dizem respeito às atribuições e
+            responsabilidades dos profissionais de segurança e da saúde, percebemos que sem a atuação conjunta desses
+            servidores a
+            concretização da oferta da saúde no sistema prisional se torna praticamente inviável.</p>
+    </div>
+</div>
+<footer style="height: 39.05px; width: 100%; background-color: #FF592A;">
+    <img style="height: 22.65px; margin: 8.5px 37.05px;" src="recursos/imgs/SI_F1.png">
+    <img style="height: 22.75px; margin: 8.5px 37.05px; position: absolute; right: 0px;" src="recursos/imgs/SI_F2.png">
+</footer>
+
+<script>
+    $(() => {
+        pontos = 0;
+        let respondido = [];
+        let gabarito = [2, 1];
+        let comparacao = [];
+        let mostrarSub = true;
+        let resposta = '';
+        let feedCerto = $(document).find('[id^=feedCerto]').hide();
+        let feedErrado = $(document).find('[id^=feedErrado]').hide();
+        let submeter = $(document).find('[class=submeter]').hide();
+        let questao = $(document).find('[id^=opc]');
+
+        $(feedCerto).on('click', apagarFeeds);
+        $(feedErrado).on('click', apagarFeeds);
+
+        function apagarFeeds() {
+            feedCerto.fadeOut();
+            feedErrado.fadeOut();
+        }
+
+        questao.map((index, sel) => {
+            respondido[index] = false;
+            comparacao[index] = false;
+            $(sel).click(responder);
+        });
+
+        function responder(sel) {
+            resposta = sel.target.id;
+            respondido[(sel.target.id).split("_")[1]] = true;
+            if (mostrarSub && respondido.every(elem => elem == true)) {
+                submeter.fadeIn();
+            }
+        }
+
+        $(submeter).on('click', () => {
+            questao.map((index, selected) => {
+                console.log(selected.value);
+                if (selected.value == gabarito[index]) {
+                    comparacao[index] = true;
+                }
+            })
+
+            if (comparacao.every(elem => elem == true)) {
+                $(feedCerto).fadeIn();
+                pontos += 1;
+                mostrarSub = false;
+                submeter.hide();
+            } else {
+                $(feedErrado).fadeIn();
+            }
+        })
+    })
+</script>
